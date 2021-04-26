@@ -1,10 +1,11 @@
 #!/bin/bash
-x=1
+  systemctl stop smb nmb
   for variable in $(zfs list -t snapshot | grep -v NAME | awk -F " " {'print $1'});do
     arrVar+=("$variable")
-    x=$((x+1))
   done
   for snaps in ${arrVar[@]};do
-    umount -f /snaps/$snaps
+    name=$(echo $snaps | sed "s/://g")
+    umount -f /snaps/$name
   done
-
+  rm -rf /snaps/*
+  sleep 5
