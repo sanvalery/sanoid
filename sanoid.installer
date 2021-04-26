@@ -108,6 +108,7 @@ EOF
 cat << "EOF" | tee /root/mount.snap
 #!/bin/bash
   SAMBA_FILE="/etc/samba/smb.conf"
+  mkdir -p /etc/samba/samba.d
   SAMBA_FILE2="/etc/samba/samba.d/include.conf"
   for variable in $(zfs list -t snapshot | grep -v NAME | awk -F " " {'print $1'});do
     arrVar+=("$variable")
@@ -121,6 +122,7 @@ cat << "EOF" | tee /root/mount.snap
     mount -t zfs $snaps /snaps/$name
   done
   echo "[global]" > $SAMBA_FILE
+  echo "include = /etc/samba/samba.d/include.conf" >> $SAMBA_FILE
   echo "workgroup = WORKGROUP" >> $SAMBA_FILE
   echo "security = user" >> $SAMBA_FILE
   echo "passdb backend = tdbsam" >> $SAMBA_FILE
