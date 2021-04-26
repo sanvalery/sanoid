@@ -136,7 +136,7 @@ cat << "EOF" | tee /root/mount.snap
     name2=$(echo $name | sed "s/\//_/g")
     echo "[$name2]" >> $SAMBA_FILE2
     echo "path = /snaps/$name" >> $SAMBA_FILE2
-    echo "valid users = cent     # allow only security group" >> $SAMBA_FILE2
+    echo "valid users = bmsuser     # allow only security group" >> $SAMBA_FILE2
     echo "writable = no" >> $SAMBA_FILE2
     echo "public = yes" >> $SAMBA_FILE2
     echo "browseable = yes" >> $SAMBA_FILE2
