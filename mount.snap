@@ -1,7 +1,5 @@
 #!/bin/bash
-  SAMBA_FILE="/etc/samba/smb.conf"
-  SAMBA_FILE2="/etc/samba/samba.d/include.conf"
-  for variable in $(zfs list -t snapshot | grep -v NAME | awk -F " " {'print $1'});do
+  for variable in $(zfs list -t snapshot | grep -v NAME | grep -v CDRSNAP | awk -F " " {'print $1'});do
     arrVar+=("$variable")
   done
   for snapsDir in ${arrVar[@]};do
@@ -12,25 +10,5 @@
     name=$(echo $snaps | sed "s/://g")
     mount -t zfs $snaps /snaps/$name
   done
-  echo "[global]" > $SAMBA_FILE
-  echo "include = /etc/samba/samba.d/include.conf" >> $SAMBA_FILE
-  echo "workgroup = WORKGROUP" >> $SAMBA_FILE
-  echo "security = user" >> $SAMBA_FILE
-  echo "passdb backend = tdbsam" >> $SAMBA_FILE
-  echo "printing = cups" >> $SAMBA_FILE
-  echo "printcap name = cups" >> $SAMBA_FILE
-  echo "load printers = no" >> $SAMBA_FILE
-  echo "cups options = raw" >> $SAMBA_FILE
-  echo " " > $SAMBA_FILE2
-  for samba in ${arrVar[@]};do
-    name=$(echo $samba | sed "s/://g")
-    name2=$(echo $name | sed "s/\//_/g")
-    name3=$(echo $name2 | sed "s/@/_/g")
-    echo "[$name3]" >> $SAMBA_FILE2
-    echo "path = /snaps/$name" >> $SAMBA_FILE2
-    echo "valid users = bmsuser     # allow only security group" >> $SAMBA_FILE2
-    echo "writable = no" >> $SAMBA_FILE2
-    echo "public = yes" >> $SAMBA_FILE2
-    echo "browseable = yes" >> $SAMBA_FILE2
-  done
+  
   systemctl restart smb nmb
