@@ -1,6 +1,6 @@
 #!/bin/bash
   systemctl stop smb nmb
-  for variable in $(zfs list -t snapshot | grep -v NAME | awk -F " " {'print $1'});do
+  for variable in $(zfs list -t snapshot | grep -v NAME | grep -v CDRSNAP | awk -F " " {'print $1'});do
     arrVar+=("$variable")
   done
   for snaps in ${arrVar[@]};do
